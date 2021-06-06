@@ -42,7 +42,7 @@ new_line:
         mov     edx, eax
         mov     dl, [ebp+12]
         dec     bl                  ;Decrease height square counter
-        jz      new_row
+        js      new_row
 change_color:
         xor     dh, bh              ;Set new color in edx
         ror     edx, 16
