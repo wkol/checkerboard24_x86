@@ -16,8 +16,8 @@ int main(int argc, const char* argv[]) {
         printf("File not found.\n");
         return 0;
     }
-    if (strtol(argv[2], NULL, 10) > 255) {
-        printf("Square size cannot be larger than 255");
+    if (strtol(argv[2], NULL, 10) > 127) {
+        printf("Square size cannot be larger than 127");
         return 0;
     }
     unsigned int width, height;
