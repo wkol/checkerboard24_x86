@@ -24,24 +24,17 @@ checkerboard24:
         add     edi, 54
         shl     eax, 8
         shl     ebx, 8
-        ; 
-        mov     bl, [ebp+12]
-        add     bl, 1
 new_line:
-;CHANGE IT LATER
+        mov     ecx, eax
+        shr     ecx, 8
         dec      bl                  ;Decrease height square counter
-        jnz      set_primary        ; if == 0 set_new_bl
+        jns      set_primary        ; if == 0 set_new_bl
         not      al
         mov      bl, [ebp+12]
 set_primary:
-        mov     ecx, eax
-        shr     ecx, 8
         mov     edx, [ebp+20]
-        shl     edx, 8
-        mov     dl, [ebp+12]
         and     al, 1
-        jnz     change_color         ; if primary color is 1 change
-        mov     edx, [ebp+16]
+        cmovnz  edx, [ebp+16] ; if primary color is 1 change
         shl     edx, 8
         mov     dl, [ebp+12]
 change_color:
