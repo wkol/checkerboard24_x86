@@ -23,7 +23,7 @@ int main(int argc, const char* argv[]) {
     fseek(fp, 0, SEEK_SET);
     fread(image, 1, bmpSize, fp);
     fclose(fp);
-    void *newImage = checkerboard24(image, atoi(argv[2]),  strtol(argv[3], NULL, 16), strtol(argv[4], NULL, 16));
+    void *newImage = checkerboard24(image, strtol(argv[2], NULL, 10),  strtol(argv[3], NULL, 16), strtol(argv[4], NULL, 16));
     fp = fopen("newImage.bmp", "wb");
     fwrite(newImage, 1, bmpSize, fp);
     fclose(fp);

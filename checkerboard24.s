@@ -23,28 +23,26 @@ checkerboard24:
         shl     ebx, 8
         mov     bl, [ebp+12]
         add     bl, 1
-
-
-
 new_line:
 ;CHANGE IT LATER
-        dec     esi
-        add     edi, ecx
         dec      bl                  ;Decrease height square counter
-        jnz      set_primary
+        jnz      set_primary        ; if == 0 set_new_bl
         not      al
         mov      bl, [ebp+12]
 set_primary:
         mov     ecx, eax
         shr     ecx, 8
-        mov     dl, [ebp+12]
         mov     edx, [ebp+20]
         shl     edx, 8
+        mov     dl, [ebp+12]
         and     al, 1
-        jnz     change_color
+        jnz     change_color         ; if primary color is 1 change
         mov     edx, [ebp+16]
         shl     edx, 8
+        mov     dl, [ebp+12]
 change_color:
+        dec     dl
+        jns     set_pixel      ; checks if there is end of the square
         xor     dh, bh              ;Set new color in edx
         ror     edx, 16
         ror     ebx, 16
@@ -62,20 +60,12 @@ set_pixel:
         add     edi, 3
         ; Checks
         cmp     ecx, 3
-        jl      new_line
-
-        cmp     esi, 0
-        jl      end
-        dec     dl
-        jz      change_color        ; checks if there is end of the square
-        jmp     set_pixel
-
-
-
-
+        jge     change_color
+        add     edi, ecx
+        dec     esi
+        jnz     new_line
 end:
         mov     eax, [ebp+8]        ; set a pointer to the image as return value
-
         ; epilogue
         pop     edi
         pop     esi
