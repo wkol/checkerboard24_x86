@@ -9,40 +9,41 @@ checkerboard24:
         push    ebx
         push    esi
         push    edi
-        mov     eax, [ebp+8]     ; EAX contains pointer to the image
-        mov     ecx, [eax+18]    ; get width of the image
-        mov     edx, [ebp+16]    ; first 24 bits of EDX contains the first color
-        mov     ebx, [ebp+20]
-        mov     esi, [eax+22]    ; get height
-        xor     ebx, edx
-        shl     edx, 8
-        shl     ebx, 8
-        mov     dl, [ebp+12]     ; last 8 bits of EDX contains square_size_width
-        mov     bl, dl           ; cl contains square_size_height
-        lea     ecx, [ecx+ecx*2+3]
-        and     ecx, -4
+        mov     eax, [ebp+8]
         mov     edi, eax
+        mov     edx, [ebp+16]
+        mov     ebx, [ebp+20]
+        mov     esi, [eax+22]
+        xor     ebx, edx
+        mov     eax, [eax+18]
+        lea     eax, [eax+eax*2+3]
+        and     eax, -4
         add     edi, 54
-        mov     eax, [ebp+16]
         shl     eax, 8
-new_row:
-        xor     ah, bh
-        ror     eax, 16
-        ror     ebx, 16
-        xor     ax, bx
-        rol     eax, 16
-        rol     ebx, 16
-        ;mov     edx, eax
+        shl     ebx, 8
         mov     bl, [ebp+12]
+        add     bl, 1
+
+
+
 new_line:
-        mov     ecx, [ebp+8]
-        mov     ecx, [ecx+18]
-        lea     ecx, [ecx+ecx*2+3]
-        and     ecx, -4
-        mov     edx, eax
+;CHANGE IT LATER
+        dec     esi
+        add     edi, ecx
+        dec      bl                  ;Decrease height square counter
+        jnz      set_primary
+        not      al
+        mov      bl, [ebp+12]
+set_primary:
+        mov     ecx, eax
+        shr     ecx, 8
         mov     dl, [ebp+12]
-        dec     bl                  ;Decrease height square counter
-        js      new_row
+        mov     edx, [ebp+20]
+        shl     edx, 8
+        and     al, 1
+        jnz     change_color
+        mov     edx, [ebp+16]
+        shl     edx, 8
 change_color:
         xor     dh, bh              ;Set new color in edx
         ror     edx, 16
@@ -52,23 +53,30 @@ change_color:
         rol     ebx, 16
         mov     dl, [ebp+12]        ;Set new width square counter to sq_size
 set_pixel:
-        sub     ecx, 3
-        ror     edx, 8
-        mov     [edi], dx
-        ror     edx, 16             ;0x00RRGGBB
+        sub     ecx, 3              ; decrease width count
+        ror     edx, 8              ; get color from edx
+        mov     [edi], dx           ; set color of the pixel to
+        ror     edx, 16
         mov     [edi+2], dl
         rol     edx, 24
         add     edi, 3
-        dec     dl
-        jz      change_color
+        ; Checks
         cmp     ecx, 3
-        jge     set_pixel
-        add     edi, ecx
-        dec     esi
-        jnz     new_line
+        jl      new_line
 
-end:        ; epilogue
-        mov     eax, [ebp+8]
+        cmp     esi, 0
+        jl      end
+        dec     dl
+        jz      change_color        ; checks if there is end of the square
+        jmp     set_pixel
+
+
+
+
+end:
+        mov     eax, [ebp+8]        ; set a pointer to the image as return value
+
+        ; epilogue
         pop     edi
         pop     esi
         pop     ebx
