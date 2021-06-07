@@ -9,18 +9,22 @@ checkerboard24:
         push    ebx
         push    esi
         push    edi
+
         mov     eax, [ebp+8]
         mov     edi, eax
         mov     edx, [ebp+16]
         mov     ebx, [ebp+20]
         mov     esi, [eax+22]
         xor     ebx, edx
+        ; Calculate padded width
         mov     eax, [eax+18]
         lea     eax, [eax+eax*2+3]
         and     eax, -4
+        ; Set edi to the image's pointer
         add     edi, 54
         shl     eax, 8
         shl     ebx, 8
+        ; 
         mov     bl, [ebp+12]
         add     bl, 1
 new_line:

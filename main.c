@@ -16,6 +16,18 @@ int main(int argc, const char* argv[]) {
         printf("File not found.\n");
         return 0;
     }
+    if (strtol(argv[2], NULL, 10) > 255) {
+        printf("Square size cannot be larger than 255");
+        return 0;
+    }
+    unsigned int width, height;
+    fseek(fp, 18, SEEK_SET);
+    fread(&width, 4, 1, fp);
+    fread(&height, 4, 1, fp);
+    if (width > 16777215 || height > 16777215) {
+        printf("Image width or height too big");
+        return 0;
+    }
     unsigned int bmpSize;
     fseek(fp, 2, SEEK_SET);
     fread(&bmpSize, 4, 1, fp);
